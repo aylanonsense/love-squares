@@ -1,8 +1,10 @@
 local Entity = require 'src/Entity'
 local Puzzle = require 'src/Puzzle'
+local PUZZLES = require 'src/puzzles'
 
 -- Entity vars
 local entities
+local puzzle
 
 -- Add a spawn function to the Entity class
 Entity.spawn = function(class, args)
@@ -15,15 +17,10 @@ function love.load()
   -- Initialize game vars
   entities = {}
   -- Spawn initial entities
-  Puzzle:spawn({
+  puzzle = Puzzle:spawn({
     x = 200,
     y = 100,
-    puzzleData = [[
-4301
-2321
-4001
-1123
-]]
+    puzzleData = PUZZLES[1]
   })
 end
 
