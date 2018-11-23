@@ -1,7 +1,7 @@
 local createClass = require 'src/createClass'
 
 return createClass({
-  blah = function(self)
-    self.health = self.health - 2
-  end
+  init = function(self) end,
+  update = function(self) end,
+  draw = function(self) end
 })

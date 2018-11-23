@@ -11,8 +11,10 @@ local function createClass(class, superClass)
     extend(class, superClass)
   end
   -- Add an instantiation function to the class
-  class.new = function(instanceData)
-    return extend(instanceData, class)
+  class.new = function(args)
+    local instance = extend(args, class)
+    instance:init()
+    return instance
   end
   -- Return the class
   return class
