@@ -37,7 +37,7 @@ function love.update(dt)
     entity:update(dt)
   end
   -- Move on to the next puzzle
-  if puzzle:isFullyCleared() then
+  if puzzle:isFullyCleared() and puzzleIndex <= 9 then
     puzzleIndex = puzzleIndex + 1
     puzzle:die()
     puzzle = Puzzle:spawn({

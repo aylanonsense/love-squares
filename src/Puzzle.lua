@@ -2,6 +2,10 @@ local createClass = require 'src/createClass'
 local Entity = require 'src/Entity'
 local PuzzleTile = require 'src/PuzzleTile'
 
+local TILE_MODIFIERS = {
+  ['+'] = 'hasStickyValue'
+}
+
 local Puzzle = createClass({
   constructor = function(self)
     self.tiles = {}
@@ -16,24 +20,37 @@ local Puzzle = createClass({
     local index, char
     local col = 0
     local row = 1
+    local modifiers = {}
     for index = 1, #self.puzzleData do
       local char = string.sub(self.puzzleData, index, index)
-      if char == '\n' then
-        row = row + 1
-        col = 0
-      else
-        col = col + 1
-      end
-      if char ~= ' ' and char ~= '\n' then
-        self:createTile({
-          puzzle = self,
-          tileSize = self.tileSize,
-          x = (self.tileSize + self.tilePadding) * (col - 1),
-          y = (self.tileSize + self.tilePadding) * (row - 1),
-          value = tonumber(char)
-        }, col, row)
-        self.gridWidth = math.max(col, self.gridWidth)
-        self.gridHeight = math.max(row, self.gridHeight)
+      if char ~= '.' then
+        if TILE_MODIFIERS[char] then
+          table.insert(modifiers, TILE_MODIFIERS[char])
+        else
+          if char == '\n' then
+          row = row + 1
+            col = 0
+          else
+            col = col + 1
+          end
+          if char ~= ' ' and char ~= '\n' then
+            local props = {
+              puzzle = self,
+              tileSize = self.tileSize,
+              x = (self.tileSize + self.tilePadding) * (col - 1),
+              y = (self.tileSize + self.tilePadding) * (row - 1),
+              value = tonumber(char)
+            }
+            local index, modifier
+            for index, modifier in ipairs(modifiers) do
+              props[modifier] = true
+            end
+            modifiers = {}
+            self:createTile(props, col, row)
+            self.gridWidth = math.max(col, self.gridWidth)
+            self.gridHeight = math.max(row, self.gridHeight)
+          end
+        end
       end
     end
   end,

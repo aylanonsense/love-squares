@@ -18,19 +18,23 @@ local PuzzleTile = createClass({
     local y = self.puzzle.y + self.y
     -- Draw rectangle
     love.graphics.setColor(self.isCleared and TILE_COLORS.CLEARED or TILE_COLORS[self.value])
-    love.graphics.rectangle('fill', x, y, self.tileSize, self.tileSize)
+    if self.hasStickyValue then
+      love.graphics.circle('fill', x + self.tileSize / 2, y + self.tileSize / 2, self.tileSize / 1.8)
+    else
+      love.graphics.rectangle('fill', x, y, self.tileSize, self.tileSize)
+    end
     -- Draw value text
-    if not self.isCleared then
+    if not self.isCleared or self.hasStickyValue then
       love.graphics.setFont(FONT)
       love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
       love.graphics.print(self.value, x + 18, y + 10)
     end
   end,
   getValue = function(self)
-    if self.isCleared then
-      return 0
-    else
+    if not self.isCleared or self.hasStickyValue then
       return self.value
+    else
+      return 0
     end
   end,
   clear = function(self)
